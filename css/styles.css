@@ -22,7 +22,9 @@ a {
 }
 a:hover, a:focus {
 	color: #3397db;
-	text-decoration: none;
+  text-decoration: none;    
+  background-color: #000;
+  outline-color: #3397db;
 }
 a img{
 	border: none 0px #fff;
@@ -133,6 +135,11 @@ nav h1 a {
   padding: 0 10px;
   width: 200px;
 }
+.filter-options select:hover, .filter-options select:focus {
+  color:#3397db;
+  outline: #3397db 3px;
+  background-color: #252525;
+} 
 
 /* ====================== Restaurant Listing ====================== */
 #restaurants-list {
@@ -188,7 +195,12 @@ nav h1 a {
   text-decoration: none;
   text-transform: uppercase;
 }
-
+#restaurants-list li a:hover, #restaurants-list li a:focus {
+  color: #3397db;
+  text-decoration: none;    
+  background-color: #000;
+  outline-color: #3397db;
+}
 /* ====================== Restaurant Details ====================== */
 /*.inside header {
   position: fixed;
@@ -275,7 +287,7 @@ nav h1 a {
 }
 #reviews-list li {
   background-color: #fff;
-    border: 2px solid #f3f3f3;
+  border: 2px solid #f3f3f3;
   display: block;
   list-style-type: none;
   margin: 0 0 30px;
