@@ -1,6 +1,6 @@
 // check if service workers are supported before trying to register
 if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/js/sw.js'/*, {scope: '/js/'}*/)
+    navigator.serviceWorker.register('./sw.js')
     .then(function(reg) {
       // registration worked
       console.log('[Service Workers] Registration succeeded. Scope is ' + reg.scope);
