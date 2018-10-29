@@ -56,7 +56,6 @@ self.addEventListener('activate', function(event) {
 self.addEventListener('fetch', function(event){
     console.log("[Service Worker] Fetch", event.request.url);
     
-     //my approach
     const requestURL = new URL(event.request.url);
    
     if (requestURL.pathname.startsWith("/restaurant.html")) {
@@ -64,6 +63,7 @@ self.addEventListener('fetch', function(event){
         console.log("requestURL: " + requestURL);
         event.respondWith(caches.match("/restaurant.html"));
         return;
+
     }
     else {
         // default fetch
@@ -74,5 +74,7 @@ self.addEventListener('fetch', function(event){
                 console.log("error", event.request.url);
             })
         );
-    }    
+    }
+
+    
 });
