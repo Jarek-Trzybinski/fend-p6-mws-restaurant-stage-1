@@ -1,4 +1,4 @@
-let cacheName = "restaurantApp2";
+let cacheName = "restaurantApp-v25";
 
 // listen for service worker's install event
 self.addEventListener('install', function(event){
@@ -8,6 +8,7 @@ self.addEventListener('install', function(event){
             console.log("[Service Worker]: Cache opened");
             // add files to the cache
             return cache.addAll([
+                "./",
                 "./index.html",
                 "./restaurant.html",
                 "./data/restaurants.json",
@@ -29,39 +30,49 @@ self.addEventListener('install', function(event){
                 console.log(`[Service Worker]: Cache Open Error: {error}`);
             });
         })
-    )
-})
+    );
+});
 
 // listen for service worker's activate event
 self.addEventListener('activate', function(event) {
-    console.log("[Service Worker] Activation succeed");
+    console.log("[Service Worker] activation successful");
+    
     event.waitUntil(
-        // caches.keys() method returns all the names of caches we have
-        caches.keys().then(function(names){
-            // The Promise.all(iterable) method returns a single Promise that resolves when all of the promises in the iterable argument have resolved or when the iterable argument contains no promises. It rejects with the reason of the first promise that rejects.
-            Promise.all(
-                // The filter() method creates an array filled with all array elements that pass a test (provided as a function).
-                names.filter(function(name){
-                    return name!==cacheName;
-                }).map(function(name){
-                    return caches.delete(name);
-                })
-            )
-            
-
+        // caches.keys create array of cache names
+        caches.keys().then(function(cachesNames) {
+            //map cachesNames.map call defines function on each element of array
+            return cachesNames.map(function(thisCacheName){
+                //if cache name in cache storage is different than cacheName will be deletaed
+                if (thisCacheName !== cacheName) {
+                    console.log("[Service Worker Cache] " + thisCacheName + " removed");
+                    return caches.delete(thisCacheName);
+                }
+            });
         })
+    );
+});
 
-    )
-})
-
-// listen for service worker's fetch event
-self.addEventListener('fetch', function(event) {
-
-    // The respondWith() method of FetchEvent prevents the browser's default fetch handling, and allows you to provide a promise for a Response yourself.
-   event.respondWith(
-       caches.open(cacheName).then(function(cache){
-           return cache.match(event.request);
-       })
-   );
-})
-
+// listen for service worker's fetch 
+self.addEventListener('fetch', function(event){
+    console.log("[Service Worker] Fetch", event.request.url);
+    
+     //my approach
+    const requestURL = new URL(event.request.url);
+   
+    if (requestURL.pathname.startsWith("/restaurant.html")) {
+        // fetch in case of restaurant.html with id parameter
+        console.log("requestURL: " + requestURL);
+        event.respondWith(caches.match("/restaurant.html"));
+        return;
+    }
+    else {
+        // default fetch
+        event.respondWith(
+            caches.match(event.request).then(function(response) {
+                return response || fetch(event.request);
+            }).catch(function(error){
+                console.log("error", event.request.url);
+            })
+        );
+    }    
+});
